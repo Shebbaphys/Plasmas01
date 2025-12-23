@@ -1,0 +1,1424 @@
+\documentclass[11pt,a4paper]{article}
+
+% ============================================================================
+% PAQUETES
+% ============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% ============================================================================
+% CONFIGURACIÓN DE PÁGINA
+% ============================================================================
+\geometry{margin=2.5cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+
+% ============================================================================
+% CONFIGURACIÓN DE HYPERREF
+% ============================================================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    urlcolor=blue!70!black,
+    citecolor=green!50!black
+}
+
+% ============================================================================
+% CONFIGURACIÓN DE LISTINGS (CÓDIGO)
+% ============================================================================
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{pythonblue}{rgb}{0.2,0.4,0.6}
+\definecolor{juliapurple}{rgb}{0.5,0.2,0.5}
+
+\lstdefinestyle{pythonstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{pythonblue}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    rulecolor=\color{pythonblue!50},
+    language=Python
+}
+
+\lstdefinestyle{juliastyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{juliapurple}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    rulecolor=\color{juliapurple!50},
+    morekeywords={function,end,if,else,elseif,for,while,return,using,const,struct,mutable,abstract,primitive,type,module,export,import,begin,let,do,try,catch,finally,throw,global,local,in,isa,where}
+}
+
+\lstdefinestyle{fortranstyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{orange!80!black}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    rulecolor=\color{orange!50},
+    language=Fortran
+}
+
+% ============================================================================
+% CAJAS DE INFORMACIÓN
+% ============================================================================
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{infobox}[1][]{
+    colback=blue!5!white,
+    colframe=blue!75!black,
+    fonttitle=\bfseries,
+    title=#1,
+    breakable
+}
+
+\newtcolorbox{warningbox}[1][]{
+    colback=orange!5!white,
+    colframe=orange!75!black,
+    fonttitle=\bfseries,
+    title=#1,
+    breakable
+}
+
+\newtcolorbox{importantbox}[1][]{
+    colback=red!5!white,
+    colframe=red!75!black,
+    fonttitle=\bfseries,
+    title=#1,
+    breakable
+}
+
+\newtcolorbox{physicbox}[1][]{
+    colback=green!5!white,
+    colframe=green!60!black,
+    fonttitle=\bfseries,
+    title=#1,
+    breakable
+}
+
+% ============================================================================
+% ENCABEZADO Y PIE DE PÁGINA
+% ============================================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{Scripts de Ploteo - Simulación Híbrida PIC}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ============================================================================
+% DOCUMENTO
+% ============================================================================
+\begin{document}
+
+% ============================================================================
+% PORTADA
+% ============================================================================
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\Huge\bfseries Documentación de Scripts de Ploteo\par}
+    \vspace{0.5cm}
+    {\LARGE Simulación Híbrida PIC 1D\par}
+    \vspace{1cm}
+    {\Large Código RRK-FFT de Viñas (1993)\par}
+    
+    \vspace{2cm}
+    
+    \begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,width=0.8\textwidth]
+        \centering
+        \textbf{Scripts documentados:}\\[0.5em]
+        \texttt{plotenergy\_beam.py} -- Lectura de datos Fortran\\
+        \texttt{plot\_kinetic2.jl} -- Lectura de datos Julia
+    \end{tcolorbox}
+    
+    \vspace{2cm}
+    
+    {\large Reproducción de la Figura 8 de\\
+    \textbf{Winske \& Leroy (1984)}\\
+    \textit{``Diffuse Ions Produced by Electromagnetic Ion Beam Instabilities''}\\
+    J. Geophys. Res., Vol. 89, No. A5, pp. 2673-2688\par}
+    
+    \vfill
+    
+    {\large \today\par}
+\end{titlepage}
+
+% ============================================================================
+% TABLA DE CONTENIDOS
+% ============================================================================
+\tableofcontents
+\newpage
+
+% ============================================================================
+% INTRODUCCIÓN
+% ============================================================================
+\section{Introducción}
+
+Este documento proporciona una explicación detallada, línea por línea, de los scripts de visualización utilizados para analizar los resultados de la simulación híbrida PIC 1D. Los scripts leen el archivo binario \texttt{energy.d12} generado por la simulación y producen gráficos que reproducen la Figura 8 del paper seminal de Winske \& Leroy (1984).
+
+\subsection{Archivos Documentados}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+\textbf{Script} & \textbf{Lenguaje} & \textbf{Lee datos de} \\
+\midrule
+\texttt{plotenergy\_beam.py} & Python 3 & Código Fortran \\
+\texttt{plot\_kinetic2.jl} & Julia & Código Julia \\
+\bottomrule
+\end{tabular}
+\caption{Scripts de ploteo y sus fuentes de datos}
+\end{table}
+
+\subsection{Estructura del Archivo \texttt{energy.d12}}
+
+El archivo \texttt{energy.d12} contiene:
+\begin{enumerate}
+    \item Un \textbf{header} con parámetros de la simulación
+    \item Múltiples \textbf{registros} con datos de energía en cada paso de tiempo
+\end{enumerate}
+
+\begin{infobox}[Estructura del Header]
+El header contiene $N_{\text{header}} = 18 + 8 \times N_{\text{sp}}$ valores de punto flotante, donde $N_{\text{sp}}$ es el número de especies de iones.
+
+Para $N_{\text{sp}} = 2$: $N_{\text{header}} = 18 + 16 = 34$ valores.
+\end{infobox}
+
+% ============================================================================
+% PARTE 1: SCRIPT PYTHON
+% ============================================================================
+\newpage
+\part{Script Python para Datos Fortran}
+\label{part:python}
+
+\section{Encabezado y Propósito}
+
+\subsection{Shebang}
+
+\begin{lstlisting}[style=pythonstyle]
+#!/usr/bin/env python3
+\end{lstlisting}
+
+\textbf{Propósito:} Esta línea es el \textit{shebang} que indica al sistema operativo Unix/Linux que este script debe ejecutarse con Python 3. Permite ejecutar el script directamente como:
+\begin{verbatim}
+$ ./plotenergy_beam.py
+\end{verbatim}
+en lugar de:
+\begin{verbatim}
+$ python3 plotenergy_beam.py
+\end{verbatim}
+
+\subsection{Docstring}
+
+\begin{lstlisting}[style=pythonstyle]
+"""
+================================================================================
+    Script para reproducir la Figura 8 de Winske & Leroy (1984)
+    Lee datos del codigo Fortran hyb1d_rrkfft.f90
+    
+    DETECTA AUTOMATICAMENTE el formato del archivo energy.d12
+    
+    Genera 3 figuras:
+    1. Figura 8 (4 paneles, escala log en Wf)
+    2. Figura 8 (4 paneles, escala lineal)
+    3. Energias globales del sistema (1 panel)
+================================================================================
+"""
+\end{lstlisting}
+
+\textbf{Propósito:} El docstring documenta el propósito general del script. Es una buena práctica de programación que ayuda a otros (y a ti mismo en el futuro) a entender qué hace el código.
+
+% ----------------------------------------------------------------------------
+\section{Importaciones}
+
+\subsection{NumPy}
+
+\begin{lstlisting}[style=pythonstyle]
+import numpy as np
+\end{lstlisting}
+
+\textbf{Propósito:} NumPy es la biblioteca fundamental para cálculo numérico en Python. Se usa para:
+\begin{itemize}
+    \item Crear y manipular arrays de datos
+    \item Operaciones matemáticas vectorizadas (más rápidas que loops)
+    \item Leer datos binarios con \texttt{np.frombuffer()}
+\end{itemize}
+
+\subsection{Matplotlib}
+
+\begin{lstlisting}[style=pythonstyle]
+import matplotlib.pyplot as plt
+\end{lstlisting}
+
+\textbf{Propósito:} Matplotlib es la biblioteca estándar de visualización en Python. El módulo \texttt{pyplot} proporciona una interfaz similar a MATLAB para crear gráficos.
+
+\subsection{Path}
+
+\begin{lstlisting}[style=pythonstyle]
+from pathlib import Path
+\end{lstlisting}
+
+\textbf{Propósito:} \texttt{Path} proporciona una forma orientada a objetos de manejar rutas de archivos. Se usa para:
+\begin{itemize}
+    \item Verificar si un archivo existe: \texttt{Path(filename).exists()}
+    \item Obtener el tamaño del archivo: \texttt{Path(filename).stat().st\_size}
+\end{itemize}
+
+\subsection{Struct}
+
+\begin{lstlisting}[style=pythonstyle]
+import struct
+\end{lstlisting}
+
+\begin{importantbox}[Crítico para Archivos Fortran]
+El módulo \texttt{struct} es esencial para interpretar bytes como datos empaquetados. Fortran escribe archivos binarios con ``record markers'' (4 bytes) antes y después de cada registro. La función \texttt{struct.unpack('i', ...)} convierte 4 bytes a un entero de 32 bits.
+\end{importantbox}
+
+% ----------------------------------------------------------------------------
+\section{Constante Global}
+
+\begin{lstlisting}[style=pythonstyle]
+IHPARM = 18
+\end{lstlisting}
+
+\textbf{Propósito:} Define el número de parámetros globales en el header del archivo binario.
+
+\begin{physicbox}[¿Por qué 18?]
+El código Fortran original define:
+\begin{lstlisting}[style=fortranstyle,numbers=none]
+INTEGER, PARAMETER :: ihparm=18, nheadr=ihparm+8*nsp
+\end{lstlisting}
+Los primeros 18 valores del header son parámetros globales de la simulación (\texttt{dt}, \texttt{dx}, \texttt{nx}, etc.). Después vienen 8 parámetros por cada especie de ion.
+\end{physicbox}
+
+% ----------------------------------------------------------------------------
+\section{Función \texttt{read\_header\_fortran()}}
+
+\subsection{Lectura del Record Marker}
+
+\begin{lstlisting}[style=pythonstyle]
+def read_header_fortran(filename, nsp_guess=2):
+    with open(filename, 'rb') as f:
+        rec_marker = struct.unpack('i', f.read(4))[0]
+\end{lstlisting}
+
+\textbf{Propósito:} Abre el archivo en modo binario (\texttt{'rb'}) y lee los primeros 4 bytes.
+
+\begin{warningbox}[Formato Binario de Fortran]
+Fortran escribe archivos con ``record markers'':
+\begin{center}
+\texttt{[4 bytes: tamaño] [DATOS] [4 bytes: tamaño]}
+\end{center}
+Antes de cada bloque de datos, escribe un entero de 4 bytes indicando el tamaño del bloque en bytes.
+
+\textbf{Ejemplo:} Si el header tiene 34 floats de 4 bytes cada uno, el record marker será $34 \times 4 = 136$.
+\end{warningbox}
+
+\textbf{Explicación del código:}
+\begin{itemize}
+    \item \texttt{struct.unpack('i', ...)}: El formato \texttt{'i'} significa ``signed integer'' de 4 bytes
+    \item \texttt{f.read(4)}: Lee exactamente 4 bytes del archivo
+    \item \texttt{[0]}: Extrae el valor de la tupla retornada por \texttt{unpack}
+\end{itemize}
+
+\subsection{Detección Automática del Formato}
+
+\begin{lstlisting}[style=pythonstyle]
+        for nsp in [2, 1]:
+            nheadr = IHPARM + 8 * nsp
+            for float_size in [4, 8]:  # float32 o float64
+                expected_size = nheadr * float_size
+                if rec_marker == expected_size:
+                    print(f"Header detectado: nsp={nsp}, float{float_size*8}")
+\end{lstlisting}
+
+\textbf{Propósito:} Detecta automáticamente:
+\begin{enumerate}
+    \item Cuántas especies de iones hay ($N_{\text{sp}} = 1$ o $2$)
+    \item Si los floats son de 4 bytes (\texttt{REAL} de Fortran) u 8 bytes (\texttt{DOUBLE PRECISION})
+\end{enumerate}
+
+\begin{infobox}[¿Por qué es necesaria la detección automática?]
+El código Fortran puede compilarse con diferentes opciones:
+\begin{itemize}
+    \item Con \texttt{-fdefault-real-8}: Los \texttt{REAL} son de 8 bytes
+    \item Sin esa opción: Los \texttt{REAL} son de 4 bytes
+\end{itemize}
+Además, diferentes versiones del código usan diferentes números de especies.
+\end{infobox}
+
+\subsection{Lectura del Header}
+
+\begin{lstlisting}[style=pythonstyle]
+                    dtype = np.float32 if float_size == 4 else np.float64
+                    header = np.frombuffer(f.read(nheadr * float_size), dtype=dtype)
+\end{lstlisting}
+
+\textbf{Propósito:}
+\begin{itemize}
+    \item \texttt{np.frombuffer()}: Convierte bytes crudos a un array de NumPy
+    \item \texttt{dtype}: Especifica cómo interpretar los bytes (\texttt{float32} o \texttt{float64})
+\end{itemize}
+
+\subsection{Verificación del Marker Final}
+
+\begin{lstlisting}[style=pythonstyle]
+                    rec_end = struct.unpack('i', f.read(4))[0]
+\end{lstlisting}
+
+\textbf{Propósito:} Fortran escribe el mismo tamaño al final del registro. Esto sirve como verificación de integridad de los datos.
+
+% ----------------------------------------------------------------------------
+\section{Función \texttt{parse\_header()}}
+
+\begin{lstlisting}[style=pythonstyle]
+def parse_header(header, nsp):
+    params = {
+        'dt': float(header[0]),
+        'dx': float(header[1]),
+        'nx': int(header[2]),
+        'itmax': int(header[3]),
+        'lfld': int(header[4]),
+        'nsp': int(header[5]),
+        'np': int(header[6]),
+        'npg': int(header[7]),
+        'betaen': float(header[8]),
+        'wpiwci': float(header[9]),
+        'bf0': [float(header[10]), float(header[11]), float(header[12])],
+        'ifield': int(header[13]),
+        'iparticles': int(header[14]),
+        'ienergy': int(header[15]),
+        'ifilter': int(header[16]),
+        'itrestart': int(header[17]),
+    }
+\end{lstlisting}
+
+\textbf{Propósito:} Convierte el array numérico del header en un diccionario con nombres descriptivos.
+
+\begin{physicbox}[¿Por qué los índices específicos?]
+El código Fortran escribe el header en este orden exacto:
+\begin{lstlisting}[style=fortranstyle,numbers=none]
+header(1)=dt
+header(2)=dx
+header(3)=float(nx)
+header(4)=float(itmax)
+...
+\end{lstlisting}
+Los índices en Python empiezan en 0, por lo que \texttt{header[0]} corresponde a \texttt{header(1)} de Fortran.
+\end{physicbox}
+
+\subsection{Parámetros por Especie}
+
+\begin{lstlisting}[style=pythonstyle]
+    for is_ in range(nsp):
+        indh = IHPARM + 8 * is_
+        params[f'rdn_{is_+1}'] = float(header[indh])
+        params[f'vdr_{is_+1}'] = float(header[indh + 1])
+        params[f'betain_{is_+1}'] = float(header[indh + 2])
+        params[f'anis_{is_+1}'] = float(header[indh + 3])
+        params[f'qi_{is_+1}'] = float(header[indh + 4])
+        params[f'ai_{is_+1}'] = float(header[indh + 5])
+        params[f'nions_{is_+1}'] = int(header[indh + 6])
+        params[f'gg_{is_+1}'] = float(header[indh + 7])
+\end{lstlisting}
+
+\textbf{Propósito:} Lee los 8 parámetros de cada especie de ion.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{clp{8cm}}
+\toprule
+\textbf{Offset} & \textbf{Parámetro} & \textbf{Descripción} \\
+\midrule
++0 & \texttt{rdn} & Densidad relativa de la especie \\
++1 & \texttt{vdr} & Velocidad de drift (en $V_A$) \\
++2 & \texttt{betain} & Beta de la especie ($8\pi n T / B_0^2$) \\
++3 & \texttt{anis} & Anisotropía de temperatura ($T_\perp / T_\parallel$) \\
++4 & \texttt{qi} & Carga (en unidades de $e$) \\
++5 & \texttt{ai} & Masa (en unidades de $m_p$) \\
++6 & \texttt{nions} & Número de partículas de esta especie \\
++7 & \texttt{gg} & Factor de normalización \\
+\bottomrule
+\end{tabular}
+\caption{Parámetros por especie en el header}
+\end{table}
+
+\textbf{¿Por qué \texttt{indh = IHPARM + 8 * is\_}?} Cada especie tiene 8 parámetros, almacenados consecutivamente después de los parámetros globales.
+
+% ----------------------------------------------------------------------------
+\section{Función \texttt{detect\_energy\_format()}}
+
+\begin{lstlisting}[style=pythonstyle]
+def detect_energy_format(filename, header_bytes, nsp, float_size):
+    with open(filename, 'rb') as f:
+        f.seek(header_bytes)
+        rec_marker = struct.unpack('i', f.read(4))[0]
+\end{lstlisting}
+
+\textbf{Propósito:} Salta el header y lee el marker del primer registro de datos para determinar su formato.
+
+\textbf{¿Por qué \texttt{f.seek(header\_bytes)}?} Posiciona el cursor de lectura justo después del header (incluyendo sus record markers).
+
+\subsection{Formatos Posibles}
+
+\begin{lstlisting}[style=pythonstyle]
+    formats = {
+        'original': 2 + 3*nsp + 6,           # tim, tpal, tper, umx, enrgys
+        'scalar_wk': 2 + 3*nsp + 2 + 6,      # + wkpal_total, wkper_total
+        'array_wk': 2 + 5*nsp + 6,           # + wkpal(nsp), wkper(nsp)
+    }
+\end{lstlisting}
+
+\textbf{Propósito:} Define los tres formatos posibles de registros de energía.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcp{7cm}}
+\toprule
+\textbf{Formato} & \textbf{Floats} & \textbf{Contenido} \\
+\midrule
+\texttt{original} & $2 + 3N_{\text{sp}} + 6$ & tim, tpal, tper, umx, enrgys \\
+\texttt{scalar\_wk} & $2 + 3N_{\text{sp}} + 2 + 6$ & + wkpal\_total, wkper\_total \\
+\texttt{array\_wk} & $2 + 5N_{\text{sp}} + 6$ & + wkpal(nsp), wkper(nsp) \\
+\bottomrule
+\end{tabular}
+\caption{Formatos de registro de energía}
+\end{table}
+
+\begin{infobox}[¿Por qué hay diferentes formatos?]
+El código Fortran ha evolucionado. Versiones más nuevas guardan más información (energías cinéticas por especie). El script detecta automáticamente qué versión generó el archivo.
+\end{infobox}
+
+% ----------------------------------------------------------------------------
+\section{Función \texttt{read\_energy\_file\_fortran()}}
+
+\subsection{Cálculo del Número de Registros}
+
+\begin{lstlisting}[style=pythonstyle]
+    file_size = Path(filename).stat().st_size
+    data_bytes = file_size - header_bytes
+    n_records = data_bytes // record_total
+\end{lstlisting}
+
+\textbf{Propósito:} Calcula cuántos registros de datos hay en el archivo.
+
+\textbf{Fórmula:}
+\begin{equation}
+N_{\text{registros}} = \frac{\text{tamaño\_archivo} - \text{tamaño\_header}}{\text{tamaño\_por\_registro}}
+\end{equation}
+
+donde \texttt{record\_total = 4 + record\_bytes + 4} (incluyendo los markers).
+
+\subsection{Loop de Lectura}
+
+\begin{lstlisting}[style=pythonstyle]
+    for i in range(n_records):
+        marker_data = f.read(4)
+        if len(marker_data) < 4:
+            break
+        rec_start = struct.unpack('i', marker_data)[0]
+        
+        if rec_start != record_bytes:
+            print(f"ADVERTENCIA registro {i}: marker={rec_start}, esperado={record_bytes}")
+            break
+\end{lstlisting}
+
+\textbf{Propósito:}
+\begin{itemize}
+    \item Lee el marker de inicio de cada registro
+    \item Verifica que coincida con el tamaño esperado
+    \item Si no coincide, algo está mal y se detiene la lectura
+\end{itemize}
+
+\subsection{Parsing de Datos}
+
+\begin{lstlisting}[style=pythonstyle]
+            idx = 0
+            step[i] = int(data_raw[idx])
+            time[i] = data_raw[idx + 1]
+            idx += 2
+            
+            tpal[i, :] = data_raw[idx:idx + nsp]
+            idx += nsp
+            
+            tper[i, :] = data_raw[idx:idx + nsp]
+            idx += nsp
+\end{lstlisting}
+
+\textbf{Propósito:} Extrae cada campo del registro usando un índice que avanza.
+
+\textbf{¿Por qué usar \texttt{idx}?} Los datos están empaquetados secuencialmente. El índice rastrea la posición actual en el array de datos crudos.
+
+% ----------------------------------------------------------------------------
+\section{Función \texttt{plot\_figure8\_fortran()}}
+
+\subsection{Extracción de Energías según Formato}
+
+\begin{lstlisting}[style=pythonstyle]
+    if energy_format == 'array_wk':
+        wkpal = data['wkpal']
+        wkper = data['wkper']
+        
+        if nsp >= 2:
+            Wm_par = wkpal[:, 0]
+            Wm_perp = 2.0 * wkper[:, 0]  # Corregir factor 2
+            Wb_par = wkpal[:, 1]
+            Wb_perp = 2.0 * wkper[:, 1]
+\end{lstlisting}
+
+\textbf{Propósito:} Extrae las energías cinéticas por especie.
+
+\begin{importantbox}[Corrección del Factor 2]
+\textbf{¿Por qué \texttt{2.0 * wkper}?}
+
+El código de simulación calcula:
+\begin{equation}
+\texttt{wkper} = \frac{1}{2} \sum_n (v_{y,n}^2 + v_{z,n}^2) \cdot \text{fac2}
+\end{equation}
+
+Pero la energía cinética perpendicular \textbf{física} es:
+\begin{equation}
+K_\perp = \frac{1}{2}(K_y + K_z) = \frac{1}{2} \cdot \frac{1}{2} m \sum_n (v_{y,n}^2 + v_{z,n}^2)
+\end{equation}
+
+El factor $\frac{1}{2}$ adicional en la definición de \texttt{wkper} significa que debemos multiplicar por 2 para obtener la energía física correcta.
+\end{importantbox}
+
+\subsection{Normalización}
+
+\begin{lstlisting}[style=pythonstyle]
+    xlen = params['xlen']
+    W0_mag = xlen / 2.0
+    W0_kin = Wm[0] + Wb[0]
+    W0 = W0_kin if W0_kin > 0 else 1.0
+\end{lstlisting}
+
+\textbf{Propósito:} Define las energías de referencia para normalizar.
+
+\begin{physicbox}[Energías de Normalización]
+\textbf{¿Por qué \texttt{W0\_mag = xlen / 2.0}?}
+
+En unidades normalizadas donde $B_0 = 1$, la energía magnética del campo de fondo es:
+\begin{equation}
+W_{B,0} = \frac{B_0^2 L}{8\pi} = \frac{L}{2} \quad \text{(en unidades normalizadas)}
+\end{equation}
+
+\textbf{¿Por qué usar \texttt{W0\_kin}?}
+
+Normalizar por la energía cinética inicial hace que las energías sean $\mathcal{O}(1)$, facilitando la comparación con el paper de Winske \& Leroy.
+\end{physicbox}
+
+\subsection{Creación de la Figura}
+
+\begin{lstlisting}[style=pythonstyle]
+    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+\end{lstlisting}
+
+\textbf{Propósito:} Crea una figura con 4 paneles (2 filas $\times$ 2 columnas).
+\begin{itemize}
+    \item \texttt{figsize=(12, 10)}: Tamaño en pulgadas (ancho, alto)
+\end{itemize}
+
+\subsection{Panel (a): Energías del Beam}
+
+\begin{lstlisting}[style=pythonstyle]
+    ax = axes[0, 0]
+    if nsp >= 2 and np.any(Wb_par_norm > 0):
+        ax.plot(t, Wb_par_norm, color=colors['par'], lw=2, label=r'$W_{b\parallel}$')
+        ax.plot(t, Wb_perp_norm, color=colors['perp'], lw=2, label=r'$W_{b\perp}$')
+\end{lstlisting}
+
+\textbf{Propósito:} Grafica las energías paralela y perpendicular del beam.
+
+\textbf{¿Por qué \texttt{r'\$W\_\{b\textbackslash parallel\}\$'}?}
+\begin{itemize}
+    \item \texttt{r'...'}: ``Raw string'' (no interpreta \texttt{\textbackslash})
+    \item \texttt{\$...\$}: Activa el modo matemático de \LaTeX
+    \item \texttt{\textbackslash parallel}: Produce el símbolo $\parallel$
+\end{itemize}
+
+\subsection{Panel (d): Escala Logarítmica}
+
+\begin{lstlisting}[style=pythonstyle]
+    ax.semilogy(t, Wf_norm_mag, color=colors['Wf'], lw=2, label=r'$W_f$')
+\end{lstlisting}
+
+\textbf{Propósito:} \texttt{semilogy} usa escala logarítmica en el eje Y.
+
+\begin{physicbox}[¿Por qué escala logarítmica?]
+La energía de fluctuaciones magnéticas crece \textbf{exponencialmente} durante la fase lineal de la inestabilidad:
+\begin{equation}
+W_f(t) \propto e^{2\gamma t}
+\end{equation}
+donde $\gamma$ es la tasa de crecimiento. En escala log, esto aparece como una línea recta.
+\end{physicbox}
+
+% ----------------------------------------------------------------------------
+\section{Función \texttt{plot\_global\_energies()}}
+
+\begin{lstlisting}[style=pythonstyle]
+    W_B = enrgys[:, 0]      # Energia magnetica de fluctuaciones
+    W_E = enrgys[:, 1]      # Energia electrica
+    K_par = enrgys[:, 2]    # Energia cinetica paralela total
+    K_perp = enrgys[:, 3]   # Energia cinetica perpendicular total
+    K_tot = enrgys[:, 4]    # Energia cinetica total
+    E_tot = enrgys[:, 5]    # Energia total del sistema
+\end{lstlisting}
+
+\textbf{Propósito:} Extrae cada componente del array \texttt{enrgys}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{clc}
+\toprule
+\textbf{Índice} & \textbf{Variable Fortran} & \textbf{Descripción} \\
+\midrule
+0 & \texttt{bfldenrgy} & Energía magnética $\delta B^2 / 8\pi$ \\
+1 & \texttt{efldenrgy} & Energía eléctrica $E^2 / 8\pi$ \\
+2 & \texttt{wkpalenrgy} & Energía cinética paralela total \\
+3 & \texttt{wkperenrgy} & Energía cinética perpendicular total \\
+4 & \texttt{wktotenrgy} & Energía cinética total \\
+5 & \texttt{totenrgy} & Energía total del sistema \\
+\bottomrule
+\end{tabular}
+\caption{Contenido del array \texttt{enrgys}}
+\end{table}
+
+\subsection{Diagnóstico de Conservación}
+
+\begin{lstlisting}[style=pythonstyle]
+    dE = (E_tot[-1] - E_tot[0]) / E_tot[0] * 100
+    print(f"  Delta E/E_0 = {dE:.4f} %")
+\end{lstlisting}
+
+\textbf{Propósito:} Calcula el error en la conservación de energía como porcentaje.
+
+\begin{warningbox}[Verificación de Conservación]
+Un error grande ($> 10\%$) indica problemas numéricos en la simulación:
+\begin{itemize}
+    \item Paso de tiempo demasiado grande
+    \item Número insuficiente de partículas
+    \item Problemas en el esquema numérico
+\end{itemize}
+\end{warningbox}
+
+% ----------------------------------------------------------------------------
+\section{Función \texttt{main()}}
+
+\begin{lstlisting}[style=pythonstyle]
+def main():
+    import sys
+    
+    energy_file = sys.argv[1] if len(sys.argv) > 1 else "energy.d12"
+\end{lstlisting}
+
+\textbf{Propósito:} Permite especificar el archivo como argumento de línea de comandos.
+
+\textbf{Uso:}
+\begin{verbatim}
+$ python3 plotenergy_beam.py              # usa "energy.d12"
+$ python3 plotenergy_beam.py otro.d12     # usa "otro.d12"
+\end{verbatim}
+
+\begin{lstlisting}[style=pythonstyle]
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\textbf{Propósito:} Solo ejecuta \texttt{main()} si el script se ejecuta directamente, no si se importa como módulo en otro script.
+
+% ============================================================================
+% PARTE 2: SCRIPT JULIA
+% ============================================================================
+\newpage
+\part{Script Julia para Datos Julia}
+\label{part:julia}
+
+\section{Encabezado}
+
+\begin{lstlisting}[style=juliastyle]
+#!/usr/bin/env julia
+\end{lstlisting}
+
+\textbf{Propósito:} Shebang para ejecutar directamente como \texttt{./plot\_kinetic2.jl}.
+
+\begin{lstlisting}[style=juliastyle]
+#=
+================================================================================
+    Script para reproducir la Figura 8 de Winske & Leroy (1984)
+    ...
+================================================================================
+=#
+\end{lstlisting}
+
+\textbf{Propósito:} Comentario multi-línea en Julia (sintaxis \texttt{\#= ... =\#}).
+
+% ----------------------------------------------------------------------------
+\section{Importaciones}
+
+\begin{lstlisting}[style=juliastyle]
+using Printf
+\end{lstlisting}
+
+\textbf{Propósito:} Proporciona \texttt{@sprintf} para formateo de strings estilo C.
+
+\begin{lstlisting}[style=juliastyle]
+using CairoMakie
+\end{lstlisting}
+
+\textbf{Propósito:} Biblioteca de visualización de alta calidad.
+
+\begin{infobox}[Ventajas de CairoMakie sobre Plots.jl]
+\begin{itemize}
+    \item Mejor renderizado vectorial (PDF, SVG)
+    \item Más control sobre la apariencia
+    \item Mejor soporte para \LaTeX\ en etiquetas
+    \item Figuras de calidad publicación
+\end{itemize}
+\end{infobox}
+
+% ----------------------------------------------------------------------------
+\section{Constantes}
+
+\begin{lstlisting}[style=juliastyle]
+const nsp = 2
+const ihparm = 18
+const nheadr = ihparm + 8 * nsp
+\end{lstlisting}
+
+\textbf{Propósito:} Define las mismas constantes que el código de simulación.
+
+\begin{infobox}[¿Por qué \texttt{const}?]
+En Julia, declarar constantes permite:
+\begin{itemize}
+    \item Optimizaciones del compilador (el valor es conocido en tiempo de compilación)
+    \item Evitar reasignaciones accidentales
+    \item Mejor inferencia de tipos
+\end{itemize}
+\end{infobox}
+
+\textbf{Diferencia con Python:} Julia requiere que \texttt{nsp} sea conocido en tiempo de compilación para dimensionar arrays estáticos.
+
+% ----------------------------------------------------------------------------
+\section{Función \texttt{read\_header()}}
+
+\begin{lstlisting}[style=juliastyle]
+function read_header(filename::String)
+    header = zeros(Float64, nheadr)
+    open(filename, "r") do f
+        read!(f, header)
+    end
+\end{lstlisting}
+
+\textbf{Propósito:} Lee el header del archivo binario de Julia.
+
+\begin{importantbox}[Diferencia CRÍTICA con Fortran]
+Julia escribe datos binarios \textbf{SIN record markers}:
+\begin{center}
+\textbf{Fortran:} \texttt{[4 bytes] [DATOS] [4 bytes]}\\
+\textbf{Julia:} \texttt{[DATOS]}
+\end{center}
+Por eso usamos \texttt{read!(f, header)} directamente, sin parsear bytes extra.
+\end{importantbox}
+
+\begin{lstlisting}[style=juliastyle]
+    params = Dict{String, Any}(
+        "dt" => header[1],
+        "dx" => header[2],
+        ...
+    )
+\end{lstlisting}
+
+\textbf{Propósito:} Crea un diccionario con tipos mixtos (\texttt{String} $\rightarrow$ \texttt{Any}).
+
+\textbf{¿Por qué \texttt{Any}?} Porque los valores pueden ser \texttt{Float64}, \texttt{Int}, o arrays.
+
+\subsection{Loop sobre Especies}
+
+\begin{lstlisting}[style=juliastyle]
+    for is in 1:nsp
+        indh = ihparm + 8 * (is - 1)
+        params["rdn_$is"] = header[indh + 1]
+        params["vdr_$is"] = header[indh + 2]
+        ...
+    end
+\end{lstlisting}
+
+\textbf{Propósito:} Lee los parámetros de cada especie.
+
+\textbf{¿Por qué \texttt{(is - 1)}?} En Julia los índices empiezan en 1, pero el offset sigue la convención de 0-based del código original de Fortran.
+
+\textbf{¿Por qué \texttt{"rdn\_\$is"}?} Interpolación de strings en Julia usa \texttt{\$}.
+
+% ----------------------------------------------------------------------------
+\section{Función \texttt{read\_energy\_file()}}
+
+\subsection{Cálculo del Tamaño de Registro}
+
+\begin{lstlisting}[style=juliastyle]
+    record_size = 2 + nsp_file + nsp_file + nsp_file + 6 + nsp_file + nsp_file
+\end{lstlisting}
+
+\textbf{Propósito:} Calcula cuántos \texttt{Float64} hay por registro.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{Campo} & \textbf{Tamaño} & \textbf{Descripción} \\
+\midrule
+\texttt{tim} & 2 & [paso, tiempo] \\
+\texttt{tpal} & $N_{\text{sp}}$ & Temperatura paralela por especie \\
+\texttt{tper} & $N_{\text{sp}}$ & Temperatura perpendicular por especie \\
+\texttt{umx} & $N_{\text{sp}}$ & Velocidad media por especie \\
+\texttt{enrgys} & 6 & Energías globales \\
+\texttt{wkpal\_sp} & $N_{\text{sp}}$ & Energía cinética $\parallel$ por especie \\
+\texttt{wkper\_sp} & $N_{\text{sp}}$ & Energía cinética $\perp$ por especie \\
+\midrule
+\textbf{Total} & $2 + 5N_{\text{sp}} + 6$ & \\
+\bottomrule
+\end{tabular}
+\caption{Estructura de un registro de energía en Julia}
+\end{table}
+
+Para $N_{\text{sp}} = 2$: $2 + 10 + 6 = 18$ floats por registro.
+
+\subsection{Loop de Lectura}
+
+\begin{lstlisting}[style=juliastyle]
+    open(filename, "r") do f
+        seek(f, header_bytes)
+        
+        for i in 1:n_records
+            tim = zeros(Float64, 2)
+            read!(f, tim)
+            step[i] = Int(tim[1])
+            time[i] = tim[2]
+\end{lstlisting}
+
+\textbf{Propósito:}
+\begin{itemize}
+    \item \texttt{seek(f, header\_bytes)}: Salta el header
+    \item \texttt{read!(f, tim)}: Lee directamente en el array pre-asignado
+    \item \texttt{Int(tim[1])}: Convierte el paso de tiempo a entero
+\end{itemize}
+
+\begin{infobox}[Ventaja de \texttt{read!}]
+\texttt{read!} lee directamente en un array existente sin crear arrays temporales. Esto es más eficiente en memoria y velocidad que crear nuevos arrays en cada iteración.
+\end{infobox}
+
+% ----------------------------------------------------------------------------
+\section{Función \texttt{plot\_figure8\_corrected()}}
+
+\subsection{Corrección del Factor 2}
+
+\begin{lstlisting}[style=juliastyle]
+    Wm_par = wkpal_sp[:, 1]           # W_m|| (correcta)
+    Wm_perp = 2.0 .* wkper_sp[:, 1]   # W_m_perp (CORREGIDA: factor 2)
+    Wb_par = wkpal_sp[:, 2]           # W_b|| (correcta)
+    Wb_perp = 2.0 .* wkper_sp[:, 2]   # W_b_perp (CORREGIDA: factor 2)
+\end{lstlisting}
+
+\textbf{Propósito:} Aplica la corrección del factor 2 a las energías perpendiculares.
+
+\textbf{¿Por qué \texttt{.*} (con punto)?} En Julia, el punto indica operación ``broadcast'' (elemento por elemento). Sin el punto, \texttt{2.0 * array} también funciona para escalares, pero es buena práctica ser explícito.
+
+\subsection{Normalización}
+
+\begin{lstlisting}[style=juliastyle]
+    xlen = params["xlen"]
+    W0_mag = xlen / 2.0
+    W0_kin = Wm[1] + Wb[1]
+    W0 = W0_kin
+\end{lstlisting}
+
+\textbf{Propósito:} Igual que en Python, define las energías de referencia.
+
+\textbf{¿Por qué \texttt{Wm[1]} y no \texttt{Wm[0]}?} Julia usa índices 1-based.
+
+\subsection{Parámetros de Winske}
+
+\begin{lstlisting}[style=juliastyle]
+    f = params["rdn_2"]  # fraccion del beam
+    V = params["vdr_2"]  # drift del beam en V_A
+    F = f * V^2 / 2      # parametro F de Winske
+\end{lstlisting}
+
+\textbf{Propósito:} Calcula los parámetros adimensionales usados en el paper de Winske \& Leroy (1984).
+
+\begin{physicbox}[Parámetros de Winske]
+\begin{itemize}
+    \item $f$ = fracción de densidad del beam respecto al total
+    \item $V$ = velocidad de drift del beam en unidades de $V_A$
+    \item $F = fV^2/2$ = parámetro de energía del beam
+\end{itemize}
+
+Estos parámetros determinan el régimen de la inestabilidad (resonante vs. no-resonante).
+\end{physicbox}
+
+\subsection{Predicción Teórica}
+
+\begin{lstlisting}[style=juliastyle]
+    dB_B0_pred = sqrt(f) * V
+    println("  (delta B/B_0)_max = sqrt(f) * V = $(dB_B0_pred)")
+\end{lstlisting}
+
+\textbf{Propósito:} Calcula la predicción teórica de Winske (Ecuación 16 del paper).
+
+\begin{physicbox}[Predicción de Saturación]
+La amplitud máxima de las fluctuaciones magnéticas escala como:
+\begin{equation}
+\left(\frac{\delta B}{B_0}\right)_{\text{max}} \approx \sqrt{f} \cdot V
+\end{equation}
+Esta es una predicción del análisis cuasi-lineal de la inestabilidad.
+\end{physicbox}
+
+\subsection{Creación de la Figura con CairoMakie}
+
+\begin{lstlisting}[style=juliastyle]
+    fig = Figure(size = (1000, 900), fontsize = 14)
+\end{lstlisting}
+
+\textbf{Propósito:} Crea una figura con tamaño especificado en píxeles.
+
+\textbf{Diferencia con Matplotlib:} CairoMakie usa píxeles, Matplotlib usa pulgadas.
+
+\subsection{Definición de Colores}
+
+\begin{lstlisting}[style=juliastyle]
+    color_par = :blue
+    color_perp = :red
+    color_total_m = :green
+    color_total_b = :orange
+    color_Wf = :purple
+\end{lstlisting}
+
+\textbf{Propósito:} Define colores como símbolos de Julia (\texttt{:blue}).
+
+\textbf{¿Por qué símbolos?} Son más eficientes que strings y es el estilo idiomático de Julia.
+
+\subsection{Creación de Ejes}
+
+\begin{lstlisting}[style=juliastyle]
+    ax_a = Axis(fig[1, 1],
+        xlabel = "Omega_i t",
+        ylabel = "W / W_0",
+        title = "(a) Beam Energies"
+    )
+\end{lstlisting}
+
+\textbf{Propósito:} Crea un eje en la posición [fila 1, columna 1] de la figura.
+
+\textbf{Sintaxis de CairoMakie:} \texttt{fig[i, j]} especifica la posición en el grid.
+
+\subsection{Graficación}
+
+\begin{lstlisting}[style=juliastyle]
+    lines!(ax_a, t, Wb_par_norm, color = color_par, linewidth = 2, label = "W_b||")
+\end{lstlisting}
+
+\textbf{Propósito:} Añade una línea al eje.
+
+\begin{infobox}[Convención de \texttt{!} en Julia]
+En Julia, la convención es que funciones que \textbf{modifican} su argumento terminan en \texttt{!}. Aquí \texttt{lines!} modifica \texttt{ax\_a} añadiendo una línea.
+
+Funciones sin \texttt{!} típicamente retornan un nuevo objeto sin modificar el original.
+\end{infobox}
+
+\subsection{Leyenda}
+
+\begin{lstlisting}[style=juliastyle]
+    axislegend(ax_a, position = :rt)
+\end{lstlisting}
+
+\textbf{Propósito:} Añade una leyenda al eje.
+
+\textbf{\texttt{:rt}} = ``right-top'' (esquina superior derecha).
+
+\subsection{Energía Total}
+
+\begin{lstlisting}[style=juliastyle]
+    Wtot_norm = (Wm .+ Wb .+ Wf) ./ W0
+    lines!(ax_c, t, Wtot_norm, color = :black, linewidth = 1.5, 
+           linestyle = :dash, label = "W_tot")
+\end{lstlisting}
+
+\textbf{Propósito:} Calcula y grafica la energía total (para verificar conservación).
+
+\textbf{¿Por qué \texttt{.+} y \texttt{./}?} Operaciones elemento por elemento (broadcasting).
+
+\subsection{Título Global}
+
+\begin{lstlisting}[style=juliastyle]
+    Label(fig[0, :], 
+        text = "Energy Histories - Winske & Leroy (1984) Figure 8 (Corrected)",
+        fontsize = 18, font = :bold
+    )
+\end{lstlisting}
+
+\textbf{Propósito:} Añade un título encima de todos los paneles.
+
+\textbf{\texttt{fig[0, :]}}: Fila 0 (encima de la fila 1), todas las columnas.
+
+\subsection{Guardar Figura}
+
+\begin{lstlisting}[style=juliastyle]
+    save(output_file, fig, px_per_unit = 2)
+\end{lstlisting}
+
+\textbf{Propósito:} Guarda la figura como PNG.
+
+\textbf{\texttt{px\_per\_unit = 2}}: Duplica la resolución (figura de $2000 \times 1800$ píxeles reales).
+
+% ----------------------------------------------------------------------------
+\section{Función \texttt{total\_energy\_plots()}}
+
+\begin{lstlisting}[style=juliastyle]
+    wbtot = enrgys[:,1]
+    wetot = enrgys[:,2]
+    kpal = enrgys[:,3]
+    kper = enrgys[:,4]
+    wktot = enrgys[:,5]
+    etot = enrgys[:,6]
+\end{lstlisting}
+
+\textbf{Propósito:} Extrae las energías globales del array \texttt{enrgys}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{clc}
+\toprule
+\textbf{Índice Julia} & \textbf{Variable} & \textbf{Descripción} \\
+\midrule
+1 & \texttt{bfldenrgy} & Energía magnética de fluctuaciones \\
+2 & \texttt{efldenrgy} & Energía eléctrica \\
+3 & \texttt{wkpalenrgy} & Energía cinética paralela total \\
+4 & \texttt{wkperenrgy} & Energía cinética perpendicular total \\
+5 & \texttt{wktotenrgy} & Energía cinética total \\
+6 & \texttt{totenrgy} & Energía total del sistema \\
+\bottomrule
+\end{tabular}
+\caption{Contenido del array \texttt{enrgys} en Julia}
+\end{table}
+
+% ----------------------------------------------------------------------------
+\section{Función \texttt{main()} y Punto de Entrada}
+
+\begin{lstlisting}[style=juliastyle]
+function main()
+    energy_file = "energy.d12"
+    
+    if !isfile(energy_file)
+        println("ERROR: No se encontro el archivo '$energy_file'")
+        return
+    end
+\end{lstlisting}
+
+\textbf{Propósito:} Verifica que el archivo existe antes de intentar leerlo.
+
+\begin{lstlisting}[style=juliastyle]
+if abspath(PROGRAM_FILE) == @__FILE__
+    if length(ARGS) >= 1
+        energy_file = ARGS[1]
+\end{lstlisting}
+
+\textbf{Propósito:}
+\begin{itemize}
+    \item \texttt{PROGRAM\_FILE}: El archivo que se está ejecutando
+    \item \texttt{@\_\_FILE\_\_}: El archivo donde está este código
+    \item Solo ejecuta si el script se ejecuta directamente (no si se incluye desde otro archivo)
+\end{itemize}
+
+\textbf{\texttt{ARGS}}: Array de argumentos de línea de comandos.
+
+% ============================================================================
+% PARTE 3: COMPARACIÓN
+% ============================================================================
+\newpage
+\part{Comparación entre Scripts}
+\label{part:comparacion}
+
+\section{Diferencias en Formato de Archivo Binario}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{Aspecto} & \textbf{Fortran} & \textbf{Julia} \\
+\midrule
+Record markers & Sí (4 bytes antes y después) & No \\
+Tipo de float & \texttt{REAL} (4B) o \texttt{REAL*8} (8B) & \texttt{Float64} (8B) \\
+Detección & Automática por tamaño de marker & Fijo (conocido a priori) \\
+\bottomrule
+\end{tabular}
+\caption{Diferencias en formato de archivo binario}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\begin{tcolorbox}[colback=gray!5!white,colframe=gray!75!black,width=0.9\textwidth]
+\textbf{Formato Fortran:}
+\begin{verbatim}
+[4B: size] [HEADER: 34×4B] [4B: size] [4B: size] [RECORD 1] [4B: size] ...
+\end{verbatim}
+
+\textbf{Formato Julia:}
+\begin{verbatim}
+[HEADER: 34×8B] [RECORD 1] [RECORD 2] ...
+\end{verbatim}
+\end{tcolorbox}
+\caption{Comparación visual de formatos binarios}
+\end{figure}
+
+% ----------------------------------------------------------------------------
+\section{Diferencias en Manejo de Índices}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{Aspecto} & \textbf{Python/Fortran} & \textbf{Julia} \\
+\midrule
+Primer índice & 0 & 1 \\
+Acceso a especie 1 & \texttt{array[:, 0]} & \texttt{array[:, 1]} \\
+Último elemento & \texttt{array[-1]} & \texttt{array[end]} \\
+Rango & \texttt{array[0:3]} (excluye 3) & \texttt{array[1:3]} (incluye 3) \\
+\bottomrule
+\end{tabular}
+\caption{Diferencias en indexación}
+\end{table}
+
+% ----------------------------------------------------------------------------
+\section{Diferencias en Bibliotecas de Graficación}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+\textbf{Operación} & \textbf{Matplotlib (Python)} & \textbf{CairoMakie (Julia)} \\
+\midrule
+Crear figura & \texttt{fig, axes = plt.subplots(2,2)} & \texttt{fig = Figure()} \\
+Crear eje & (implícito en subplots) & \texttt{Axis(fig[1,1], ...)} \\
+Graficar línea & \texttt{ax.plot(x, y)} & \texttt{lines!(ax, x, y)} \\
+Escala log Y & \texttt{ax.semilogy()} & \texttt{yscale = log10} \\
+Leyenda & \texttt{ax.legend()} & \texttt{axislegend(ax)} \\
+Guardar & \texttt{plt.savefig()} & \texttt{save()} \\
+\bottomrule
+\end{tabular}
+\caption{Equivalencias entre bibliotecas de graficación}
+\end{table}
+
+% ----------------------------------------------------------------------------
+\section{Complejidad de Lectura}
+
+\subsection{Script Python (para Fortran)}
+
+El script de Python es \textbf{más complejo} porque debe:
+\begin{enumerate}
+    \item Detectar automáticamente el formato (número de especies, tipo de float)
+    \item Manejar los record markers de Fortran
+    \item Soportar múltiples formatos de registro de energía
+    \item Verificar integridad de datos
+\end{enumerate}
+
+\subsection{Script Julia}
+
+El script de Julia es \textbf{más simple} porque:
+\begin{enumerate}
+    \item El formato es conocido y fijo
+    \item No hay record markers
+    \item Lectura directa con \texttt{read!()}
+    \item Un solo formato de registro
+\end{enumerate}
+
+% ----------------------------------------------------------------------------
+\section{Resumen de Flujo de Ejecución}
+
+\subsection{Python (\texttt{plotenergy\_beam.py})}
+
+\begin{figure}[h]
+\centering
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,width=0.85\textwidth]
+\begin{verbatim}
+main()
+  |
+  +---> read_energy_file_fortran()
+  |       +---> read_header_fortran()
+  |       |       +---> parse_header()
+  |       +---> detect_energy_format()
+  |       +---> [loop de lectura de registros]
+  |
+  +---> plot_figure8_fortran()
+  |       +---> Extracción de energías según formato
+  |       +---> Normalización
+  |       +---> Diagnóstico (print)
+  |       +---> Creación de figura 2x2
+  |
+  +---> plot_global_energies()
+          +---> Creación de figura 1 panel
+\end{verbatim}
+\end{tcolorbox}
+\caption{Flujo de ejecución del script Python}
+\end{figure}
+
+\subsection{Julia (\texttt{plot\_kinetic2.jl})}
+
+\begin{figure}[h]
+\centering
+\begin{tcolorbox}[colback=purple!5!white,colframe=purple!75!black,width=0.85\textwidth]
+\begin{verbatim}
+main()
+  |
+  +---> read_energy_file()
+  |       +---> read_header()
+  |       +---> [loop de lectura de registros]
+  |
+  +---> plot_figure8_corrected()
+  |       +---> Corrección factor 2
+  |       +---> Normalización
+  |       +---> Diagnóstico + parámetros de Winske
+  |       +---> Creación de figura 2x2
+  |
+  +---> plot_figure8_log()
+  |       +---> Versión con escala logarítmica
+  |
+  +---> total_energy_plots()
+          +---> Energías globales
+\end{verbatim}
+\end{tcolorbox}
+\caption{Flujo de ejecución del script Julia}
+\end{figure}
+
+% ============================================================================
+% APÉNDICE
+% ============================================================================
+\newpage
+\appendix
+
+\section{Referencia Rápida de Comandos}
+
+\subsection{Ejecución de Scripts}
+
+\begin{verbatim}
+# Python
+python3 plotenergy_beam.py                    # Usa energy.d12 por defecto
+python3 plotenergy_beam.py otro_archivo.d12   # Especifica archivo
+
+# Julia
+julia plot_kinetic2.jl                        # Usa energy.d12 por defecto
+julia plot_kinetic2.jl otro_archivo.d12       # Especifica archivo
+\end{verbatim}
+
+\subsection{Instalación de Dependencias}
+
+\begin{verbatim}
+# Python
+pip install numpy matplotlib
+
+# Julia (en el REPL)
+using Pkg
+Pkg.add("CairoMakie")
+Pkg.add("Printf")
+\end{verbatim}
+
+% ----------------------------------------------------------------------------
+\section{Estructura del Header}
+
+\begin{longtable}{clcp{6cm}}
+\toprule
+\textbf{Índice} & \textbf{Nombre} & \textbf{Tipo} & \textbf{Descripción} \\
+\midrule
+\endhead
+1 & \texttt{dt} & Float & Paso de tiempo \\
+2 & \texttt{dx} & Float & Tamaño de celda \\
+3 & \texttt{nx} & Int & Número de celdas \\
+4 & \texttt{itmax} & Int & Número máximo de iteraciones \\
+5 & \texttt{lfld} & Int & Subpasos para campos \\
+6 & \texttt{nsp} & Int & Número de especies \\
+7 & \texttt{np} & Int & Número total de partículas \\
+8 & \texttt{npg} & Int & Partículas por celda \\
+9 & \texttt{betaen} & Float & Beta de electrones \\
+10 & \texttt{wpiwci} & Float & Ratio $\omega_{pi}/\Omega_{ci}$ \\
+11-13 & \texttt{bf0} & Float[3] & Campo magnético de fondo \\
+14 & \texttt{ifield} & Int & Intervalo salida campos \\
+15 & \texttt{iparticles} & Int & Intervalo salida partículas \\
+16 & \texttt{ienergy} & Int & Intervalo salida energía \\
+17 & \texttt{ifilter} & Int & Intervalo de filtrado \\
+18 & \texttt{itrestart} & Int & Flag de reinicio \\
+\midrule
+\multicolumn{4}{c}{\textit{Por cada especie (8 valores):}} \\
+\midrule
++1 & \texttt{rdn} & Float & Densidad relativa \\
++2 & \texttt{vdr} & Float & Velocidad de drift \\
++3 & \texttt{betain} & Float & Beta de la especie \\
++4 & \texttt{anis} & Float & Anisotropía $T_\perp/T_\parallel$ \\
++5 & \texttt{qi} & Float & Carga (en $e$) \\
++6 & \texttt{ai} & Float & Masa (en $m_p$) \\
++7 & \texttt{nions} & Int & Número de partículas \\
++8 & \texttt{gg} & Float & Factor de normalización \\
+\bottomrule
+\caption{Estructura completa del header}
+\end{longtable}
+
+% ============================================================================
+% FIN DEL DOCUMENTO
+% ============================================================================
+\end{document}
