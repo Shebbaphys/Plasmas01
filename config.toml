@@ -1,0 +1,26 @@
+[simulation]
+home = "./"
+xlen = 256.0
+dt = 0.1
+tmax = 100.0
+betaen = 1.0
+wpiwci = 1.0e4
+game = 1.0
+dus = 10.0
+bnamp = 1.0e-6
+bf0 = [1.0, 0.0, 0.0]
+eta = 0.0#1.0e-6
+itrestart = 0
+ifield = 8#100
+iparticles = 8#1000
+ienergy = 10#10
+ifilter = 2
+
+[ions]
+nisp = 2#1#
+qi = [1.0, 1.0]#1.0#
+ai = [1.0, 1.0]#1.0#
+betain = [0.5, 1.0]#0.5#
+vdr = [0.0, 2.63]#0.0#
+rdn = [0.95, 0.05]#1.0#
+anis = [1.0, 1.0]#3.0#
