@@ -1,0 +1,48 @@
+ &INPUTDAT
+ VERSION      = 'Testing Hybrid1D codex A=7 b=05'
+ XLEN         = 256.0 !Longitud de la grilla
+ DT           = 0.1!0.0153 ! Paso temporal normalizado en girofrecuencias de protones
+ TMAX         = 100.0 !tiempo máximo de girofrecuencias de la simulación, tambien normaizado
+ BETAEN       = 1.0 !beta electrones
+ WPIWCI       = 1.e4 !relación frecuencia plasma/ciclotrón 
+ GAME         = 1.0 !indice adiabatico electrones
+ DUS          = 10.0 !no se que es esto, no lo vi en el código
+ BNAMP        = 1.e-6 !ruido magnético inicial de la simulación
+ BF0          = 1.0,0.0,0.0 !componentes iniciales de B (Bx, By, Bz)
+ ITRESTART    = 0 !1 para restart, 0 sin restart de la simulación
+ IFIELD       = 1 !guarda los campos cada X pasos
+ IPARTICLES   = 8 !guarda las partículas cada X pasos
+ IENERGY      = 1 !guarda las energías cada X pasos
+ IFILTER      = 2 !Filtra cada X pasos
+ ETA          = 0.0 !resistividad
+ &END
+
+&IONS
+ PTITLE       ='Proton-Core'! & Proton-Beam (Isotropic)'
+ NISP	      = 2 !número de especies. 1 para solo un core, 2 para core+beam
+ QI           = 1.0,1.0 !carga normalizada respecto a carga fundamental de protones
+ AI           = 1.0,1.0 !masa de las especies, normalizada respecto a la masa de los protones
+ BETAIN       = 1.0,1.0 !beta térmico de las especies iónicas
+ VDR          = 0.0,10.0 ! velocidad del drift en términos de la Valfen(VA) 10 para Winske
+ RDN          = 0.985,0.015 !densidades relativas de las especies. 1.0 normalizadas
+ ANIS         = 1.0,1.0 ! anisotropía térmica inicial
+ &END
+
+
+!Ahí está el .dat, y también copio los valores de parámetros de dimensiones y globales de la simulación:       
+!
+!MODULE share_dim        
+!
+!IMPLICIT NONE 
+!
+!System Length/Cells  ==>   nx=2**6=64        
+!
+!INTEGER, PARAMETER :: lpx=9,nx=2**lpx, nxp1=nx+1, nxh=nx/2          
+!
+!INTEGER, PARAMETER :: nsp=2,npg1=512,npg2=512          
+!
+!INTEGER, PARAMETER :: npg=npg1+npg2,np=nx*npg          
+!
+!INTEGER, PARAMETER :: ihparm=18,nheadr=ihparm+8*nsp       
+!
+!END MODULE share_dim 
